@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #ffebee 0%, #fce4ec 50%, #f8bbd9 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,27 +31,29 @@
         h1 {
             text-align: center;
             margin-bottom: 30px;
-            color: #333;
+            color: #880e4f;
             font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .slider-container {
             position: relative;
             width: 100%;
             overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(136, 14, 79, 0.2);
+            background: linear-gradient(145deg, #ffffff, #fff5f7);
+            border: 2px solid #f8bbd9;
         }
 
         .slider {
             display: flex;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
 
         .slide {
             flex: 0 0 33.333%;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -61,7 +63,9 @@
             width: 100%;
             height: 300px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 12px;
+            border: 2px solid white;
+            box-shadow: 0 4px 15px rgba(136, 14, 79, 0.1);
         }
 
         .arrow {
@@ -70,19 +74,20 @@
             transform: translateY(-50%);
             width: 50px;
             height: 50px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background: linear-gradient(145deg, #f8bbd9, #f48fb1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 10;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 15px rgba(136, 14, 79, 0.3);
             transition: all 0.3s ease;
+            border: 2px solid white;
         }
 
         .arrow:hover {
-            background-color: white;
+            background: linear-gradient(145deg, #f48fb1, #ec407a);
             transform: translateY(-50%) scale(1.1);
         }
 
@@ -97,7 +102,7 @@
         .arrow svg {
             width: 24px;
             height: 24px;
-            fill: #333;
+            fill: white;
         }
 
         .pager {
@@ -106,11 +111,12 @@
             align-items: center;
             margin-top: 25px;
             font-size: 18px;
-            color: #555;
-            background-color: white;
+            color: #880e4f;
+            background: linear-gradient(145deg, #ffffff, #fff5f7);
             padding: 12px 25px;
             border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(136, 14, 79, 0.15);
+            border: 2px solid #f8bbd9;
         }
 
         .pager span {
@@ -119,22 +125,35 @@
 
         .current-page {
             font-weight: bold;
-            color: #4a6cf7;
+            color: #ec407a;
+        }
+
+        .total-pages {
+            font-weight: 600;
         }
 
         /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
             .slide {
                 flex: 0 0 100%;
-            }
-
-            .arrow {
-                width: 40px;
-                height: 40px;
+                padding: 15px;
             }
 
             .slide img {
                 height: 250px;
+            }
+
+            .arrow {
+                width: 45px;
+                height: 45px;
+            }
+
+            .arrow-left {
+                left: 15px;
+            }
+
+            .arrow-right {
+                right: 15px;
             }
         }
 
@@ -179,14 +198,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         // ВАШИ 8 ИЗОБРАЖЕНИЙ - ЗАМЕНИТЕ НА ВАШИ ФАЙЛЫ
         const images = [
-            'image1.jpg',
-            'image2.jpg',
-            'image3.jpg',
-            'image4.jpg',
-            'image5.jpg',
-            'image6.jpg',
-            'image7.jpg',
-            'image8.jpg'
+            'dog1.jpg',
+            'dog2.jpg',
+            'dog3.jpg',
+            'dog4.jpg',
+            'dog5.jpg',
+            'dog7.jpg',
+            'dog6.jpg',
+            'dog8.jpg',
+            'dog3.jpg'
         ];
 
         const slider = document.querySelector('.slider');
@@ -205,7 +225,6 @@
                 slidesPerView = 3;
             }
 
-            // Для 8 изображений и 3 на странице = 3 страницы
             const total = Math.ceil(images.length / slidesPerView);
             totalPages.textContent = total;
             updateSliderPosition();
@@ -213,22 +232,22 @@
 
         function createSlides() {
             slider.innerHTML = '';
-            // Создаем слайды для всех 8 изображений
             images.forEach((image, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'slide';
                 slide.innerHTML = `<img src="${image}" alt="Изображение ${index + 1}">`;
                 slider.appendChild(slide);
             });
-
-            console.log(`Создано слайдов: ${slider.children.length}`);
         }
 
         function updateSliderPosition() {
-            const slideWidth = 100 / slidesPerView;
-            const translateX = -currentSlide * slideWidth;
+            const translateX = -currentSlide * 100;
             slider.style.transform = `translateX(${translateX}%)`;
             currentPage.textContent = currentSlide + 1;
+
+            const startIndex = currentSlide * slidesPerView;
+            const endIndex = Math.min(startIndex + slidesPerView, images.length);
+            console.log(`Страница ${currentSlide + 1}: изображения ${startIndex + 1}-${endIndex}`);
         }
 
         function nextSlide() {
